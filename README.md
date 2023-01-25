@@ -141,7 +141,7 @@ support for joins, and many-to-one and many-to-many relationships.
 Designing Data-Intensive Applications - pag 38
 </details>
 
-### Theorical Question 8
+### Theorical Question 9
 
 Given the fact that we don't know when we will need to do a achnge in the schema, do you think that we will need a nosql database instead of a relationa one ?
 
@@ -165,7 +165,7 @@ Designing Data-Intensive Applications - pag 40
 </details>
 
 
-### Theorical Question 9
+### Theorical Question 10
 
 Do you understand the difference between declarative and imperating programming ?
 
@@ -188,7 +188,7 @@ of the query.
 Designing Data-Intensive Applications - pag 43
 </details>
 
-### Theorical Question 10
+### Theorical Question 11
 
 Do you know what a pure function is ?
 
@@ -205,7 +205,7 @@ where, in any order, and rerun them on failure.
 Designing Data-Intensive Applications - pag 48
 </details>
 
-### Theorical Question 11
+### Theorical Question 12
 
 when would you use a grapgh like model ?
 
@@ -222,7 +222,7 @@ But what if many-to-many relationships are very common in your data? The relatio
 Designing Data-Intensive Applications - pag 49
 </details>
 
-### Theorical Question 12
+### Theorical Question 13
 
 In databases what an Index is ?
 
@@ -241,7 +241,7 @@ need several different indexes on different parts of the data.
 Designing Data-Intensive Applications - pag 71
 </details>
 
-### Theorical Question 12
+### Theorical Question 14
 
 Do you know what hash indexes are ?
 
@@ -265,7 +265,7 @@ since the hash map is kept completely in memory.
 Designing Data-Intensive Applications - pag 72
 </details>
 
-### Theorical Question 13
+### Theorical Question 15
 
 Do you know what a transactional database or OLTP is ?
 
@@ -284,7 +284,7 @@ interactive, the access pattern became known as online transaction processing
 Designing Data-Intensive Applications - pag 92
 </details>
 
-### Theorical Question 13
+### Theorical Question 16
 
 Do you know what a analitical database or OLAP is ?
 
@@ -313,7 +313,7 @@ Designing Data-Intensive Applications - pag 92
 </details>
 
 
-### Theorical Question 14
+### Theorical Question 17
 
 Do you know the difference between OLAP and OLTP ?
 
@@ -328,7 +328,7 @@ Designing Data-Intensive Applications - pag 91
 </details>
 
 
-### Theorical Question 15
+### Theorical Question 18
 
 Do you know the star-schema is ?
 
@@ -424,7 +424,7 @@ it is a denormalized copy of the data.
 Designing Data-Intensive Applications - pag 100
 </details>
 
-### Theorical Question 18
+### Theorical Question 19
 
 Do you understand what a data cube or OLAP cube is ?
 
@@ -456,7 +456,7 @@ aggregates such as data cubes only as a performance boost for certain queries.
 Designing Data-Intensive Applications - pag 100
 </details>
 
-### Theorical Question 19
+### Theorical Question 20
 
 Do you understand why do we need to encode and decode (also know serialize and de-serialize) ?
 
@@ -479,7 +479,7 @@ that are normally used in memory
 Designing Data-Intensive Applications - pag 112
 </details>
 
-### Theorical Question 20
+### Theorical Question 21
 
 Do you know any python library for encoding and decoding (also known as serialize and deserialize) ?
 
@@ -493,16 +493,165 @@ pickle
 Designing Data-Intensive Applications - pag 112
 </details>
 
-### Theorical Question 21
+### Theorical Question 22
 
 Do you understand what schema evolution is and how do apache Thrift and Protocol Buffers handle it ?
 
 <details><summary><b>Answer</b></summary>
 
-....
+You can add new fields to the schema, provided that you give each field a new tag
+number. If old code (which doesn’t know about the new tag numbers you added)
+tries to read data written by new code, including a new field with a tag number it
+doesn’t recognize, it can simply ignore that field. The datatype annotation allows the
+parser to determine how many bytes it needs to skip. This maintains forward com‐
+patibility: old code can read records that were written by new code.
+
+What about backward compatibility? As long as each field has a unique tag number,
+new code can always read old data, because the tag numbers still have the same
+meaning. The only detail is that if you add a new field, you cannot make it required.
+If you were to add a field and make it required, that check would fail if new code read
+data written by old code, because the old code will not have written the new field that
+you added. Therefore, to maintain backward compatibility, every field you add after
+the initial deployment of the schema must be optional or have a default value.
+
+What about changing the datatype of a field? That may be possible—check the docu‐
+mentation for details—but there is a risk that values will lose precision or get trunca‐
+ted. For example, say you change a 32-bit integer into a 64-bit integer. New code can
+easily read data written by old code, because the parser can fill in any missing bits
+with zeros. However, if old code reads data written by new code, the old code is still
+using a 32-bit variable to hold the value. If the decoded 64-bit value won’t fit in 32
+bits, it will be truncated.
 
 </details>
 
 <details><summary><b>Source</b></summary>
 Designing Data-Intensive Applications - pag 120
+</details>
+
+### Theorical Question 23
+
+Do you know what REST is ?
+
+<details><summary><b>Answer</b></summary>
+
+REST is not a protocol, but rather a design philosophy that builds upon the principles
+of HTTP [34, 35]. It emphasizes simple data formats, using URLs for identifying
+resources and using HTTP features for cache control, authentication, and content
+type negotiation.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 133
+</details>
+
+### Theorical Question 23
+
+Do you know what REST is ?
+
+<details><summary><b>Answer</b></summary>
+
+REST is a design philosophy that builds upon the principles
+of HTTP . It emphasizes simple data formats, using URLs for identifying
+resources and using HTTP features for cache control, authentication, and content
+type negotiation.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 133
+</details>
+
+
+### Theorical Question 24
+
+Do you know what SOAP is ?
+
+<details><summary><b>Answer</b></summary>
+
+SOAP is an XML-based protocol for making network API requests. vii
+Although it is most commonly used over HTTP, it aims to be independent from
+HTTP and avoids using most HTTP features. Instead, it comes with a sprawling and
+complex multitude of related standards (the web service framework, known as WS-*)
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 133
+</details>
+
+### Theorical Question 25
+
+Do you know what swagger can do for your RESTful api ?
+
+<details><summary><b>Answer</b></summary>
+
+describe it and produce documentation.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 133
+</details>
+
+### Theorical Question 26
+
+Do you understand what futures, promises and streams are ?
+
+<details><summary><b>Answer</b></summary>
+
+Futures and promises are the same. Futures encapsulate asynchronous actions that may fail. Futures also
+simplify situations where you need to make requests to multiple services in parallel,
+and combine their results. In streams call consists of not
+just one request and one response, but a series of requests and responses over time.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 133
+</details>
+
+### Theorical Question 27
+
+Do you understand why would we use a message broker (also known as message queue or message-oriented middleware) ?
+
+<details><summary><b>Answer</b></summary>
+
+• It can act as a buffer if the recipient is unavailable or overloaded, and thus
+improve system reliability.
+• It can automatically redeliver messages to a process that has crashed, and thus
+prevent messages from being lost.
+• It avoids the sender needing to know the IP address and port number of the
+recipient (which is particularly useful in a cloud deployment where virtual
+machines often come and go).
+• It allows one message to be sent to several recipients.
+• It logically decouples the sender from the recipient (the sender just publishes
+messages and doesn’t care who consumes them).
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 137
+</details>
+
+### Theorical Question 27
+
+Do you undestand what share-memory architecture,  share nothing architecture what horizontal scaling or
+scaling out is and what vertical scaling or scaling up?
+
+<details><summary><b>Answer</b></summary>
+
+Shared-memory architecture is basically building a more powerfull machine, if you need more resources, you need an even more powerful machine, replacing this machine for a more powerfull one is what we call vertical
+
+In a shared-memory architecture you have several machines working in a single mission, if you want more resources, you increase the number of servers, this is what we call jorizontal scaling or scaling out.
+
+The problem with a shared-memory approach is that the cost grows faster than line‐
+arly: a machine with twice as many CPUs, twice as much RAM, and twice as much
+disk capacity as another typically costs significantly more than twice as much. And
+due to bottlenecks, a machine twice the size cannot necessarily handle twice the load.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 146
 </details>
