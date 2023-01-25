@@ -686,3 +686,80 @@ With a timeout
 <details><summary><b>Source</b></summary>
 Designing Data-Intensive Applications - pag 157
 </details>
+
+### Theorical Question 30
+
+Do you understand what replication lag is and how it affect  ?
+
+<details><summary><b>Answer</b></summary>
+
+Leader-based replication requires all writes to go through a single node, but read-
+only queries can go to any replica. For workloads that consist of mostly reads and
+only a small percentage of writes (a common pattern on the web), there is an attrac‐
+tive option: create many followers, and distribute the read requests across those fol‐
+lowers. This removes load from the leader and allows read requests to be served by
+nearby replicas.
+
+In this read-scaling architecture, you can increase the capacity for serving read-only
+requests simply by adding more followers. However, this approach only realistically
+works with asynchronous replication—if you tried to synchronously replicate to all
+followers, a single node failure or network outage would make the entire system unavailable for writing. And the more nodes you have, the likelier it is that one will
+be down, so a fully synchronous configuration would be very unreliable.
+
+Unfortunately, if an application reads from an asynchronous follower, it may see out‐
+dated information if the follower has fallen behind.
+
+This inconsistency is just a temporary state—if you stop writing to the
+database and wait a while, the followers will eventually catch up and become consis‐
+tent with the leader. For that reason, this effect is known as eventual consistency
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 157
+</details>
+
+
+### Theorical Question 31
+
+Do you understand what "read your own writte" is refering to ?
+
+<details><summary><b>Answer</b></summary>
+
+If the user views the data shortly after making a write, the new data may not yet have
+reached the replica. To the user, it looks as though the data they submitted was lost,
+so they will be understandably unhappy.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 157
+</details>
+
+
+### Theorical Question 32
+
+Do you know what monotonic reads are ?
+
+<details><summary><b>Answer</b></summary>
+
+Our second example of an anomaly that can occur when reading from asynchronous
+followers is that it’s possible for a user to see things moving backward in time.
+This can happen if a user makes several reads from different replicas.
+
+Monotonic reads is a guarantee that this kind of anomaly does not happen. It’s a
+lesser guarantee than strong consistency, but a stronger guarantee than eventual con‐
+sistency. When you read data, you may see an old value; monotonic reads only means
+that if one user makes several reads in sequence, they will not see time go backward—
+i.e., they will not read older data after having previously read newer data.
+One way of achieving monotonic reads is to make sure that each user always makes
+their reads from the same replica (different users can read from different replicas).
+For example, the replica can be chosen based on a hash of the user ID, rather than
+randomly. However, if that replica fails, the user’s queries will need to be rerouted to
+another replica.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 157
+</details>
