@@ -763,3 +763,124 @@ another replica.
 <details><summary><b>Source</b></summary>
 Designing Data-Intensive Applications - pag 157
 </details>
+
+
+### Theorical Question 33
+
+In partitioned data do you understand what skewed data and a hot spot are?
+
+<details><summary><b>Answer</b></summary>
+
+If the partitioning is unfair, so that some partitions have more data or queries than
+others, we call it skewed. The presence of skew makes partitioning much less effective.
+In an extreme case, all the load could end up on one partition, so 9 out of 10 nodes
+are idle and your bottleneck is the single busy node. A partition with disproportion‐
+ately high load is called a hot spot.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag ___
+</details>
+
+### Theorical Question 34
+
+In databases do you understand what transactions are?
+
+<details><summary><b>Answer</b></summary>
+
+A transaction is a way for an application to group several reads and writes
+together into a logical unit. Conceptually, all the reads and writes in a transaction are
+executed as one operation: either the entire transaction succeeds (commit) or it fails
+(abort, rollback). If it fails, the application can safely retry. With transactions, error
+handling becomes much simpler for an application, because it doesn’t need to worry
+about partial failure
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag ___
+</details>
+
+
+### Theorical Question 34
+
+In databases do you understand what ACID mean?
+
+<details><summary><b>Answer</b></summary>
+
+The safety guarantees provided by transactions are often described by the well-
+known acronym ACID, which stands for Atomicity, Consistency, Isolation, and Dura‐
+bility.
+
+__Atomicity:__ In general, atomic refers to something that cannot be broken down into smaller parts.
+The word means similar but subtly different things in different branches of computing. For example, in multi-threaded programming, if one thread executes an atomic
+operation, that means there is no way that another thread could see the half-finished
+result of the operation. The system can only be in the state it was before the operation
+or after the operation, not something in between.
+
+By contrast, in the context of ACID, atomicity is not about concurrency. It does not
+describe what happens if several processes try to access the same data at the same
+time, because that is covered under the letter I, for isolation
+
+Rather, ACID atomicity describes what happens if a client wants to make several
+writes, but a fault occurs after some of the writes have been processed—for example,
+a process crashes, a network connection is interrupted, a disk becomes full, or some
+integrity constraint is violated. If the writes are grouped together into an atomic
+transaction, and the transaction cannot be completed (committed) due to a fault, then
+the transaction is aborted and the database must discard or undo any writes it has
+made so far in that transaction.
+
+__Consistency:__ The idea of ACID consistency is that you have certain statements about your data
+(invariants) that must always be true—for example, in an accounting system, credits
+and debits across all accounts must always be balanced. If a transaction starts with a
+database that is valid according to these invariants, and any writes during the transac‐
+tion preserve the validity, then you can be sure that the invariants are always satisfied.
+
+However, this idea of consistency depends on the application’s notion of invariants,
+and it’s the application’s responsibility to define its transactions correctly so that they
+preserve consistency. This is not something that the database can guarantee: if you
+write bad data that violates your invariants, the database can’t stop you. (Some spe‐
+cific kinds of invariants can be checked by the database, for example using foreign
+key constraints or uniqueness constraints. However, in general, the application
+defines what data is valid or invalid—the database only stores it.)
+
+__isolation:__ Most databases are accessed by several clients at the same time. That is no problem if
+they are reading and writing different parts of the database, but if they are accessing
+the same database records, you can run into concurrency problems (race conditions).
+
+The classic database
+textbooks formalize isolation as serializability, which means that each transaction can
+pretend that it is the only transaction running on the entire database. The database
+ensures that when the transactions have committed, the result is the same as if they
+had run serially (one after another), even though in reality they may have run con‐
+currently
+
+__Durability:__ The purpose of a database system is to provide a safe place where data can be stored
+without fear of losing it. Durability is the promise that once a transaction has com‐
+mitted successfully, any data it has written will not be forgotten, even if there is a
+hardware fault or the database crashes.
+
+
+Atomicity and isolation also apply when a single object is being changed. For exam‐
+ple, imagine you are writing a 20 KB JSON document to a database:
+
+• If the network connection is interrupted after the first 10 KB have been sent, does
+the database store that unparseable 10 KB fragment of JSON?
+• If the power fails while the database is in the middle of overwriting the previous
+value on disk, do you end up with the old and new values spliced together?
+• If another client reads that document while the write is in progress, will it see a
+partially updated value?
+
+Those issues would be incredibly confusing, so storage engines almost universally
+aim to provide atomicity and isolation on the level of a single object (such as a key-
+value pair) on one node. Atomicity can be implemented using a log for crash recov‐
+ery (see “Making B-trees reliable” on page 82), and isolation can be implemented
+using a lock on each object (allowing only one thread to access an object at any one
+time).
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag ___
+</details>
