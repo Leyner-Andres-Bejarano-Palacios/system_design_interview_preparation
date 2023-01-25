@@ -655,3 +655,34 @@ due to bottlenecks, a machine twice the size cannot necessarily handle twice the
 <details><summary><b>Source</b></summary>
 Designing Data-Intensive Applications - pag 146
 </details>
+
+### Theorical Question 28
+
+Do you understand what a failover is ?
+
+<details><summary><b>Answer</b></summary>
+
+Handling a failure of the leader is trickier: one of the followers needs to be promoted
+to be the new leader, clients need to be reconfigured to send their writes to the new
+leader, and the other followers need to start consuming data changes from the new
+leader. This process is called failover.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 157
+</details>
+
+### Theorical Question 29
+
+How do you know that the leader (or master node) has crashed ?
+
+<details><summary><b>Answer</b></summary>
+
+With a timeout
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 157
+</details>
