@@ -351,10 +351,158 @@ for brands and product categories, and each row in the dim_product table could r
 erence the brand and category as foreign keys, rather than storing them as strings in
 the dim_product table.
 
-
-
 </details>
 
 <details><summary><b>Source</b></summary>
 Designing Data-Intensive Applications - pag 91
+</details>
+
+### Theorical Question 16
+
+In Columnar storage, do you know what is the benefit of columnar compression ?
+
+<details><summary><b>Answer</b></summary>
+
+Besides only loading those columns from disk that are required for a query, we can
+further reduce the demands on disk throughput by compressing data. Fortunately,
+column-oriented storage often lends itself very well to compression.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 100
+</details>
+
+
+### Theorical Question 17
+
+Do you know what a secondary index is ?
+
+<details><summary><b>Answer</b></summary>
+
+Different queries benefit from different sort
+orders, so why not store the same data sorted in several different ways? Data needs to
+be replicated to multiple machines anyway, so that you don’t lose data if one machine
+fails. You might as well store that redundant data sorted in different ways so that
+when you’re processing a query, you can use the version that best fits the query
+pattern.
+
+Having multiple sort orders in a column-oriented store is a bit similar to having mul‐
+tiple secondary indexes in a row-oriented store. But the big difference is that the row-
+oriented store keeps every row in one place (in the heap file or a clustered index), and
+secondary indexes just contain pointers to the matching rows.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 100
+</details>
+
+### Theorical Question 18
+
+Do you understand what a materialized view is ?
+
+<details><summary><b>Answer</b></summary>
+
+data warehouse queries often involve an aggregate
+function, such as COUNT , SUM , AVG , MIN , or MAX in SQL. If the same aggregates are used
+by many different queries, it can be wasteful to crunch through the raw data every
+time. Why not cache some of the counts or sums that queries use most often?
+
+One way of creating such a cache is a materialized view. In a relational data model, it
+is often defined like a standard (virtual) view: a table-like object whose contents are
+the results of some query. The difference is that a materialized view is an actual copy
+of the query results, written to disk, whereas a virtual view is just a shortcut for writ‐
+ing queries. When you read from a virtual view, the SQL engine expands it into the
+view’s underlying query on the fly and then processes the expanded query.
+When the underlying data changes, a materialized view needs to be updated, because
+it is a denormalized copy of the data.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 100
+</details>
+
+### Theorical Question 18
+
+Do you understand what a data cube or OLAP cube is ?
+
+<details><summary><b>Answer</b></summary>
+
+A common special case of a materialized view is known as a data cube or OLAP cube. It is a grid of aggregates grouped by different dimensions.
+
+You can now draw a two-dimensional table,
+with dates along one axis and products along the other. Each cell contains the aggre‐
+gate (e.g., SUM ) of an attribute (e.g., net_price ) of all facts with that date-product
+combination. Then you can apply the same aggregate along each row or column and
+get a summary that has been reduced by one dimension (the sales by product regard‐
+less of date, or the sales by date regardless of product).
+
+![Image](img/olap_cube.png "olap cube")
+
+The advantage of a materialized data cube is that certain queries become very fast
+because they have effectively been precomputed. For example, if you want to know the total sales per store yesterday, you just need to look at the totals along the appropriate dimension—no need to scan millions of rows.
+
+The disadvantage is that a data cube doesn’t have the same flexibility as querying the
+raw data. For example, there is no way of calculating which proportion of sales comes
+from items that cost more than $100, because the price isn’t one of the dimensions.
+Most data warehouses therefore try to keep as much raw data as possible, and use
+aggregates such as data cubes only as a performance boost for certain queries.
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 100
+</details>
+
+### Theorical Question 19
+
+Do you understand why do we need to encode and decode (also know serialize and de-serialize) ?
+
+<details><summary><b>Answer</b></summary>
+
+because data in different context is stored in different formants for example:
+
+1. In memory, data is kept in objects, structs, lists, arrays, hash tables, trees, and so
+on. These data structures are optimized for efficient access and manipulation by
+the CPU (typically using pointers).
+
+2. When you want to write data to a file or send it over the network, you have to
+encode it as some kind of self-contained sequence of bytes (for example, a JSON
+document). Since a pointer wouldn’t make sense to any other process, this sequence-of-bytes representation looks quite different from the data structures
+that are normally used in memory
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 112
+</details>
+
+### Theorical Question 20
+
+Do you know any python library for encoding and decoding (also known as serialize and deserialize) ?
+
+<details><summary><b>Answer</b></summary>
+
+pickle
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 112
+</details>
+
+### Theorical Question 21
+
+Do you understand what schema evolution is and how do apache Thrift and Protocol Buffers handle it ?
+
+<details><summary><b>Answer</b></summary>
+
+....
+
+</details>
+
+<details><summary><b>Source</b></summary>
+Designing Data-Intensive Applications - pag 120
 </details>
